@@ -11,7 +11,7 @@ test('create files & remove it', function(t) {
     'rm -rf folder index.html'
   ]);
 
-  q.on('each', function(command, index) {
+  q.on('each', function(command, stdout, index) {
     if (index === 0) {
       t.ok(fs.existsSync('index.html'));
     } else if (index === 1) {

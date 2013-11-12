@@ -1,21 +1,20 @@
 var test = require('tap').test;
 var exeq = require('..');
 
-test('command name', function(t) {
+test('stdout', function(t) {
 
   var q = exeq([
-    'ls -l',
-    'cd ..',
-    'ps'
+    'man',
+    'grep'
   ]);
+
+  var n = -1;
 
   q.on('each', function(command, stdout, index) {
     if (index === 0) {
-      t.equal(command, 'ls -l');
-    } else if (index === 1) {
-      t.equal(command, 'cd ..');
+      t.equal(stdout, 'What manual page do you want?\n');
     } else {
-      t.equal(command, 'ps');
+      t.equal(stdout.slice(0, 11), 'usage: grep');
     }
   });
 
