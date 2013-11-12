@@ -14,6 +14,7 @@
     "exec",
     "command",
     "shell",
+    "synchronously",
     "bash"
   ],
   "engines": {
@@ -25,7 +26,7 @@
     "arale": "~0.2.0"
   },
   "devDependencies": {
-    "tap": "~0.4.0"
+    "tap": "*"
   },
   "scripts": {
     "test": "tap tests/*.js"

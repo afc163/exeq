@@ -58,6 +58,6 @@ $ npm test
 
 ## License
 
-MIT
+The MIT License (MIT)
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/afc163/exeq/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
