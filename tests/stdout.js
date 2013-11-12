@@ -14,7 +14,7 @@ test('stdout', function(t) {
     if (index === 0) {
       t.equal(stdout, 'What manual page do you want?\n');
     } else {
-      t.equal(stdout.slice(0, 11), 'usage: grep');
+      t.equal(stdout.slice(0, 11).toLowerCase(), 'usage: grep');
     }
   });
 
