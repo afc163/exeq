@@ -47,6 +47,8 @@ q.on('done', function(count) {
 q.run();
 ```
 
+> Do not support command string with `&&` .
+
 ## Test
 
 ```bash
