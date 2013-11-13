@@ -31,7 +31,7 @@ var q = exeq([
   'ls -l',
   'cd ..',
   'rm -rf example',
-  'ls -l'
+  'ls -l > output.txt'
 ]);
 
 q.on('each', function(command, stdout, index) {
