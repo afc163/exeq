@@ -9,7 +9,7 @@ test('command name', function(t) {
     'ps'
   ]);
 
-  q.on('each', function(command, stdout, index) {
+  q.on('each', function(command, index) {
     if (index === 0) {
       t.equal(command, 'ls -l');
     } else if (index === 1) {

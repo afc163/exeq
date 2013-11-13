@@ -34,10 +34,9 @@ var q = exeq([
   'ls -l > output.txt'
 ]);
 
-q.on('each', function(command, stdout, index) {
+q.on('each', function(command, index) {
   // After each command executed
   console.log('No.' + index + ' Executed: ' + command);
-  console.log('Stdout:' + stdout);
   console.log();
 });
 

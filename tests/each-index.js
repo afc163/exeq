@@ -11,7 +11,7 @@ test('each command index', function(t) {
 
   var n = -1;
 
-  q.on('each', function(command, stdout, index) {
+  q.on('each', function(command, index) {
     t.equal(typeof index, 'number');
     t.equal(n+1, index);
     n = index;

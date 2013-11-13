@@ -39,8 +39,8 @@ Exeq.prototype.run = function() {
   var s = spawn(cmd[0], cmd.slice(1), {
     stdio: [
       process.stdin,
-      output,
-      output
+      output ? output : process.stdout,
+      process.stderr
     ],
     cwd: this.cwd
   });
@@ -51,17 +51,9 @@ Exeq.prototype.run = function() {
     if (cmd[0] === 'cd' && cmd[1]) {
       that.cwd = path.resolve(that.cwd, cmd[1]);
     }
-    that.trigger('each', cmdString, that.stdout, that.index++);
-    that.stdout = null;
+    that.trigger('each', cmdString, that.index++);
     that.run();
   })
-
-  s.stdout && s.stdout.on('data', stdOnData);
-  s.stderr && s.stderr.on('data', stdOnData);
-
-  function stdOnData(data) {
-    that.stdout = data.toString();
-  }
 
 };
 

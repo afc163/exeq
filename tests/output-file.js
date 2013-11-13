@@ -12,10 +12,9 @@ test('stdout', function(t) {
 
   var n = -1;
 
-  q.on('each', function(command, stdout, index) {
+  q.on('each', function(command, index) {
     if (index === 0) {
       t.ok(fs.existsSync(path.resolve('a.txt')));
-      console.log(fs.readFileSync('a.txt').toString());
       t.ok(fs.readFileSync('a.txt').toString().indexOf('a.txt') >= 0);
     } else {
       t.notOk(fs.existsSync('a.txt'));

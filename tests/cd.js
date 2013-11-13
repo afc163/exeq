@@ -9,7 +9,7 @@ test('cd change cwd', function(t) {
     'cd /usr/bin'
   ]);
 
-  q.on('each', function(command, stdout, index) {
+  q.on('each', function(command, index) {
     if (this.index === 0) {
       t.equal(this.cwd, '/usr/bin');
     } else if (index === 1) {
