@@ -23,15 +23,24 @@ Exeq.prototype.run = function() {
 
   var cmdString = this.commands.shift(),
       cmd = cmdString,
-      cwd;
+      cwd,
+      output;
 
-  cmd = cmd.split(/\s+/);
+
+  var index = cmd.indexOf('>');
+  if (index > -1) {
+    output = cmd.substring(index + 1).replace(/(^\s+|\s+$)/g, '');
+    output && (output = fs.openSync(path.resolve(output), 'w'));
+    cmd = cmd.substring(0, index).trim().split(/\s+/);
+  } else {
+    cmd = cmd.trim().split(/\s+/);
+  }
 
   var s = spawn(cmd[0], cmd.slice(1), {
     stdio: [
       process.stdin,
-      null,
-      null
+      output,
+      output
     ],
     cwd: this.cwd
   });
@@ -47,13 +56,12 @@ Exeq.prototype.run = function() {
     that.run();
   })
 
-  s.stdout.on('data', function(data) {
-    that.stdout = data.toString();
-  });
+  s.stdout && s.stdout.on('data', stdOnData);
+  s.stderr && s.stderr.on('data', stdOnData);
 
-  s.stderr.on('data', function(data) {
+  function stdOnData(data) {
     that.stdout = data.toString();
-  });
+  }
 
 };
 
