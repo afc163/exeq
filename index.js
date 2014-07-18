@@ -26,15 +26,18 @@ Exeq.prototype.run = function() {
       cwd,
       output;
 
-
   var index = cmd.indexOf('>');
   if (index > -1) {
     output = cmd.substring(index + 1).replace(/(^\s+|\s+$)/g, '');
     output && (output = fs.openSync(path.resolve(output), 'w'));
     cmd = cmd.substring(0, index).trim().split(/\s+/);
   } else {
-    cmd = cmd.trim().split(/\s+/);
+    cmd = cmd.trim().split(/[^\\]\s+/);
   }
+
+  // avoid whitespace in folder
+  // like C:/Program Files
+  cmd[0] = UNBLANKS(cmd[0]);
 
   var s = spawn(cmd[0], cmd.slice(1), {
     stdio: [
@@ -59,4 +62,12 @@ Exeq.prototype.run = function() {
 
 module.exports = function(commands) {
   return new Exeq(commands);
+};
+
+var BLANKS = module.exports.BLANKS = function(str) {
+  return str.replace(/\s+/g, '__BLANKS__');
+};
+
+var UNBLANKS = module.exports.UNBLANKS = function(str) {
+  return str.replace(/__BLANKS__/g, ' ');
 };

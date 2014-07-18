@@ -1,6 +1,6 @@
 {
   "name": "exeq",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Execute shell commands synchronously.",
   "main": "index.js",
   "repository": {

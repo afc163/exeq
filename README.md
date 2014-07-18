@@ -51,6 +51,18 @@ q.run();
 
 > Do not support command string with `&&` .
 
+### Blanks in Path
+
+```js
+exeq(['~/My Folder/command init']).run(); // execute `~/My````
+```
+
+You should:
+
+```js
+exeq([exeq.BLANKS('~/My Folder/command') + 'init']).run(); // execute `~/My Folder/command`
+```
+
 ## Test
 
 ```bash
@@ -60,5 +72,3 @@ $ npm test
 ## License
 
 The MIT License (MIT)
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/afc163/exeq/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
