@@ -51,18 +51,6 @@ q.run();
 
 > Do not support command string with `&&` .
 
-### Blanks in Path
-
-```js
-exeq(['~/My Folder/command init']).run(); // execute `~/My````
-```
-
-You should:
-
-```js
-exeq([exeq.BLANKS('~/My Folder/command') + 'init']).run(); // execute `~/My Folder/command`
-```
-
 ## Test
 
 ```bash

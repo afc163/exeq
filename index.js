@@ -32,14 +32,14 @@ Exeq.prototype.run = function() {
     output && (output = fs.openSync(path.resolve(output), 'w'));
     cmd = cmd.substring(0, index).trim().split(/\s+/);
   } else {
-    cmd = cmd.trim().split(/[^\\]\s+/);
+    cmd = cmd.trim().split(/\s+/);
   }
 
   // avoid whitespace in folder
   // like C:/Program Files
-  cmd[0] = UNBLANKS(cmd[0]);
+  var parsed = parseCommand(cmd);
 
-  var s = spawn(cmd[0], cmd.slice(1), {
+  var s = spawn(parsed.cmd, parsed.arguments, {
     stdio: [
       process.stdin,
       output ? output : process.stdout,
@@ -51,8 +51,8 @@ Exeq.prototype.run = function() {
   s.on('close', function() {
     // cd /path/to
     // change cwd to /path/to
-    if (cmd[0] === 'cd' && cmd[1]) {
-      that.cwd = path.resolve(that.cwd, cmd[1]);
+    if (parsed.cmd === 'cd') {
+      that.cwd = path.resolve(that.cwd, cmdString.replace(/^cd\s+/, ''));
     }
     that.trigger('each', cmdString, that.index++);
     that.run();
@@ -64,10 +64,37 @@ module.exports = function(commands) {
   return new Exeq(commands);
 };
 
-var BLANKS = module.exports.BLANKS = function(str) {
-  return str.replace(/\s+/g, '__BLANKS__');
-};
+// ps aux
+//   ==> { cmd: 'ps', arguments: ['aux']}
+// /User/Li Lei/tools --help
+//   ==> { cmd: '/User/Li Lei/tools', arguments: ['--help']}
+function parseCommand(cmdArray) {
+  var i = 0;
+  var cmd = cmdArray[i];
+  var result = '';
+  var index;
+  while (cmdArray[i]) {
+    var stats = fs.existsSync(cmd) && fs.lstatSync(cmd);
+    if (stats && (stats.isFile() || stats.isSymbolicLink())) {
+      result = cmd;
+      index = i;
+    }
+    i += 1;
+    cmd += ' ' + cmdArray[i];
+  }
 
-var UNBLANKS = module.exports.UNBLANKS = function(str) {
-  return str.replace(/__BLANKS__/g, ' ');
-};
+  if (result) {
+    return {
+      cmd: result,
+      arguments: cmdArray.slice(index + 1)
+    };
+  }
+
+  return {
+    cmd: cmdArray[0],
+    arguments: cmdArray.slice(1)
+  };
+}
+
+// exports for test
+module.exports.parseCommand = parseCommand;
