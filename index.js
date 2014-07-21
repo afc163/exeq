@@ -7,6 +7,11 @@ function Exeq(commands) {
   this.commands = commands || [];
   this.cwd = '';
   this.index = 0;
+  var that = this;
+
+  process.nextTick(function() {
+    that.run();
+  });
 }
 
 Events.mixTo(Exeq);

@@ -1,6 +1,6 @@
 {
   "name": "exeq",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "description": "Execute shell commands synchronously.",
   "main": "index.js",
   "repository": {
@@ -18,7 +18,7 @@
     "bash"
   ],
   "engines": {
-    "node": ">= 0.8.1"
+    "node": ">= 0.10.0"
   },
   "license": "MIT",
   "dependencies": {

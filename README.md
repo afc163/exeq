@@ -4,7 +4,7 @@ Excute shell commands synchronously.
 
 [![Build Status](https://travis-ci.org/afc163/exeq.png)](https://travis-ci.org/afc163/exeq)
 [![NPM version](https://badge.fury.io/js/exeq.png)](http://badge.fury.io/js/exeq)
-[![David Status](https://david-dm.org/afc163/exeq.png)](https://david-dm.org/afc163/exeq) 
+[![David Status](https://david-dm.org/afc163/exeq.png)](https://david-dm.org/afc163/exeq)
 
 ---
 
@@ -22,7 +22,7 @@ $ npm install exeq --save
 var exeq = require('exeq');
 
 // cd command would change spawn cwd automatically
-var q = exeq([
+exeq([
   'mkdir example',
   'cd example',
   'touch README.md',
@@ -32,21 +32,14 @@ var q = exeq([
   'cd ..',
   'rm -rf example',
   'ls -l > output.txt'
-]);
-
-q.on('each', function(command, index) {
+]).on('each', function(command, index) {
   // After each command executed
   console.log('No.' + index + ' Executed: ' + command);
   console.log();
-});
-
-q.on('done', function(count) {
+}).on('done', function(count) {
   console.log('---');
   console.log(count + ' commands done!');
 });
-
-// execute the commands
-q.run();
 ```
 
 > Do not support command string with `&&` .

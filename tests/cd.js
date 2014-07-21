@@ -3,13 +3,11 @@ var exeq = require('..');
 
 test('cd change cwd', function(t) {
 
-  var q = exeq([
+  exeq([
     'cd /usr/bin',
     'cd ..',
     'cd /usr/bin'
-  ]);
-
-  q.on('each', function(command, index) {
+  ]).on('each', function(command, index) {
     if (this.index === 0) {
       t.equal(this.cwd, '/usr/bin');
     } else if (index === 1) {
@@ -17,14 +15,9 @@ test('cd change cwd', function(t) {
     } else {
       t.equal(this.cwd, '/usr/bin');
     }
-  });
-
-  q.on('done', function() {
+  }).on('done', function() {
     t.end();
   });
-
-  // execute the commands
-  q.run();
 
 });
 
