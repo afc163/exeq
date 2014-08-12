@@ -1,6 +1,6 @@
 {
   "name": "exeq",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Execute shell commands synchronously.",
   "main": "index.js",
   "repository": {
@@ -29,7 +29,6 @@
     "tap": "*"
   },
   "scripts": {
-    "test": "tap tests/*.js",
-    "postinstall": "npm star exeq"
+    "test": "tap tests/*.js"
   }
 }
