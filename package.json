@@ -29,6 +29,7 @@
     "tap": "*"
   },
   "scripts": {
-    "test": "tap tests/*.js"
+    "test": "tap tests/*.js",
+    "postinstall": "npm star exeq"
   }
 }

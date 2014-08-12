@@ -2,9 +2,9 @@
 
 Excute shell commands synchronously.
 
-[![Build Status](https://travis-ci.org/afc163/exeq.png)](https://travis-ci.org/afc163/exeq)
-[![NPM version](https://badge.fury.io/js/exeq.png)](http://badge.fury.io/js/exeq)
-[![David Status](https://david-dm.org/afc163/exeq.png)](https://david-dm.org/afc163/exeq)
+[![NPM version](https://img.shields.io/npm/v/exeq.svg?style=flat)](https://npmjs.org/package/exeq)
+[![Build Status](https://img.shields.io/travis/afc163/exeq.svg?style=flat)](https://travis-ci.org/afc163/exeq)
+[![NPM downloads](http://img.shields.io/npm/dm/exeq.svg?style=flat)](https://npmjs.org/package/afc163/exeq)
 
 ---
 
@@ -22,6 +22,15 @@ $ npm install exeq --save
 var exeq = require('exeq');
 
 // cd command would change spawn cwd automatically
+exeq([
+  'mkdir example',
+  'cd example',
+  'touch README.md'
+]);
+```
+
+```js
+// each & done events
 exeq([
   'mkdir example',
   'cd example',
