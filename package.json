@@ -1,7 +1,7 @@
 {
   "name": "exeq",
   "version": "1.0.2",
-  "description": "Execute shell commands synchronously.",
+  "description": "Excute shell commands in queue",
   "main": "index.js",
   "repository": {
     "type": "git",
