@@ -61,7 +61,15 @@ Exeq.prototype.run = function(resolve, reject) {
 };
 
 module.exports = function() {
-  return new Exeq(Array.prototype.slice.call(arguments));
+  var cmds = [], args = Array.prototype.slice.call(arguments);
+  args.forEach(function(arg) {
+    if (Array.isArray(arg)) {
+      cmds = cmds.concat(arg);
+    } else {
+      cmds.push(arg);
+    }
+  });
+  return new Exeq(cmds);
 };
 
 function parseCommand(cmd) {

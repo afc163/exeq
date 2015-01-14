@@ -3,8 +3,10 @@ var exeq = require('..');
 
 test('command name', function(t) {
   exeq(
-    'ls -l',
-    'cd ..',
+    [
+      'ls -l',
+      'cd ..'
+    ],
     'ps'
   ).then(function(results) {
     t.equal(results[0].cmd, 'ls -l');
