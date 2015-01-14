@@ -1,6 +1,6 @@
 {
   "name": "exeq",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "Excute shell commands in queue",
   "main": "index.js",
   "repository": {
@@ -14,6 +14,7 @@
     "exec",
     "command",
     "shell",
+    "promise",
     "synchronously",
     "bash"
   ],
@@ -22,10 +23,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "win-spawn": "~2.0.0",
-    "arale": "~0.2.0"
+    "q": "^1.1.2"
   },
   "devDependencies": {
+    "is-promise": "~1.0.1",
     "tap": "*"
   },
   "scripts": {

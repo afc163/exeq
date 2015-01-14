@@ -1,20 +1,17 @@
-var spawn = require('win-spawn');
+var spawn = require('child_process').spawn;
 var fs = require('fs');
 var path = require('path');
-var Events = require('arale').Events;
+var Q = require('q');
+var platform = require('os').platform();
+var eol = require('os').EOL;
 
 function Exeq(commands) {
+  this.deferred = Q.defer();
   this.commands = commands || [];
   this.cwd = '';
-  this.index = 0;
-  var that = this;
-
-  process.nextTick(function() {
-    that.run();
-  });
+  this.run();
+  return this.deferred.promise;
 }
-
-Events.mixTo(Exeq);
 
 Exeq.prototype.run = function() {
 
@@ -22,84 +19,51 @@ Exeq.prototype.run = function() {
 
   // done!
   if (this.commands.length === 0) {
-    this.trigger('done', this.index);
+    this.deferred.resolve();
     return;
   }
 
-  var cmdString = this.commands.shift(),
-      cmd = cmdString,
-      cwd,
-      output;
+  var parsed = parseCommand(this.commands.shift());
 
-  var index = cmd.indexOf('>');
-  if (index > -1) {
-    output = cmd.substring(index + 1).replace(/(^\s+|\s+$)/g, '');
-    output && (output = fs.openSync(path.resolve(output), 'w'));
-    cmd = cmd.substring(0, index).trim().split(/\s+/);
-  } else {
-    cmd = cmd.trim().split(/\s+/);
-  }
-
-  // avoid whitespace in folder
-  // like C:/Program Files
-  var parsed = parseCommand(cmd);
-
-  var s = spawn(parsed.cmd, parsed.arguments, {
+  var s = spawn(parsed.cmd, parsed.args, {
     stdio: [
       process.stdin,
-      output ? output : process.stdout,
+      process.stdout,
       process.stderr
     ],
     cwd: this.cwd
   });
 
-  s.on('close', function() {
+  s.on('exit', function(code) {
     // cd /path/to
     // change cwd to /path/to
-    if (parsed.cmd === 'cd') {
-      that.cwd = path.resolve(that.cwd, cmdString.replace(/^cd\s+/, ''));
+    if (parsed.changeCwd) {
+      that.cwd = path.resolve(that.cwd, parsed.changeCwd);
     }
-    that.trigger('each', cmdString, that.index++);
     that.run();
-  })
+  });
+
+  s.on('error', function(err) {
+    that.deferred.reject(err);
+  });
 
 };
 
-module.exports = function(commands) {
-  return new Exeq(commands);
+module.exports = function() {
+  return new Exeq(Array.prototype.slice.call(arguments));
 };
 
-// ps aux
-//   ==> { cmd: 'ps', arguments: ['aux']}
-// /User/Li Lei/tools --help
-//   ==> { cmd: '/User/Li Lei/tools', arguments: ['--help']}
-function parseCommand(cmdArray) {
-  var i = 0;
-  var cmd = cmdArray[i];
-  var result = '';
-  var index;
-  while (cmdArray[i]) {
-    var stats = fs.existsSync(cmd) && fs.lstatSync(cmd);
-    if (stats && (stats.isFile() || stats.isSymbolicLink())) {
-      result = cmd;
-      index = i;
-    }
-    i += 1;
-    cmd += ' ' + cmdArray[i];
+function parseCommand(cmd) {
+  cmd = cmd.trim();
+  var command = (platform == 'win32' ? 'cmd.exe' : 'sh');
+  var args = (platform == 'win32' ? ['/s', '/c'] : ['-c']);
+  // change cwd for "cd /path/to"
+  if (/^cd\s+/.test(cmd)) {
+    var changeCwd = cmd.replace(/^cd\s+/, '');
   }
-
-  if (result) {
-    return {
-      cmd: result,
-      arguments: cmdArray.slice(index + 1)
-    };
-  }
-
   return {
-    cmd: cmdArray[0],
-    arguments: cmdArray.slice(1)
+    cmd: command,
+    args: args.concat([cmd]),
+    changeCwd: changeCwd
   };
 }
-
-// exports for test
-module.exports.parseCommand = parseCommand;

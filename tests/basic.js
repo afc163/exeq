@@ -1,14 +1,11 @@
 var test = require('tap').test;
 var exeq = require('..');
+var isPromise = require('is-promise');
 
 test('basic use', function(t) {
 
   t.equal(typeof exeq, 'function');
-
-  var q = exeq();
-
-  t.equal(typeof q, 'object');
-  t.equal(typeof q.run, 'function');
+  t.equal(isPromise(exeq()), true);
 
   t.end();
 

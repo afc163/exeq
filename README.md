@@ -22,16 +22,16 @@ $ npm install exeq --save
 var exeq = require('exeq');
 
 // cd command would change spawn cwd automatically
-exeq([
+exeq(
   'mkdir example',
   'cd example',
   'touch README.md'
-]);
+);
 ```
 
 ```js
-// each & done events
-exeq([
+// promise
+exeq(
   'mkdir example',
   'cd example',
   'touch README.md',
@@ -41,13 +41,10 @@ exeq([
   'cd ..',
   'rm -rf example',
   'ls -l > output.txt'
-]).on('each', function(command, index) {
-  // After each command executed
-  console.log('No.' + index + ' Executed: ' + command);
-  console.log();
-}).on('done', function(count) {
-  console.log('---');
-  console.log(count + ' commands done!');
+).then(function() {
+  console.log('done!');
+}).catch(function(err) {
+  console.log(err);
 });
 ```
 
