@@ -16,7 +16,7 @@ $ npm install exeq --save
 
 ## Usage
 
-### exeq(array)
+### exeq()
 
 ```js
 var exeq = require('exeq');
@@ -28,6 +28,8 @@ exeq(
   'touch README.md'
 );
 ```
+
+### Promise `2.0.0+`
 
 ```js
 // promise
@@ -48,7 +50,28 @@ exeq(
 });
 ```
 
-> Do not support command string with `&&` .
+### stdout & stderr
+
+```js
+exeq(
+  'echo 123',
+  'echo 456',
+  'echo 789'
+).then(function(results) {
+  console.log(results[0].stdout); // '123'
+  console.log(results[1].stdout); // '456'
+  console.log(results[2].stdout); // '789'
+});
+```
+
+```js
+exeq(
+  'not-existed-command'
+).then(function(results) {
+}).catch(function(err) {
+  console.log(err); // { code: '127', stderr: ' ... ' }
+});
+```
 
 ## Test
 
