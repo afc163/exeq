@@ -46,7 +46,7 @@ Exeq.prototype.run = function() {
     if (code) {
       return that.deferred.reject({
         code: code,
-        error: stderr.toString()
+        stderr: stderr.toString()
       });
     } else {
       that.results.push({

@@ -3,19 +3,18 @@ var exeq = require('..');
 
 test('cd change cwd', function(t) {
 
-  exeq([
-    'cd /usr/bin',
+  var tempDirName = '__temp-for-tests';
+
+  exeq(
+    'mkdir ' + tempDirName,
+    'cd ' + tempDirName,
+    'pwd',
     'cd ..',
-    'cd /usr/bin'
-  ]).on('each', function(command, index) {
-    if (this.index === 0) {
-      t.equal(this.cwd, '/usr/bin');
-    } else if (index === 1) {
-      t.equal(this.cwd, '/usr');
-    } else {
-      t.equal(this.cwd, '/usr/bin');
-    }
-  }).on('done', function() {
+    'pwd',
+    'rm -rf ' + tempDirName
+  ).then(function(results) {
+    t.ok(results[2].stdout.indexOf(tempDirName) > -1);
+    t.notOk(results[4].stdout.indexOf(tempDirName) > -1);
     t.end();
   });
 

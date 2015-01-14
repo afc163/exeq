@@ -2,22 +2,14 @@ var test = require('tap').test;
 var exeq = require('..');
 
 test('command name', function(t) {
-
-  exeq([
+  exeq(
     'ls -l',
     'cd ..',
     'ps'
-  ]).on('each', function(command, index) {
-    if (index === 0) {
-      t.equal(command, 'ls -l');
-    } else if (index === 1) {
-      t.equal(command, 'cd ..');
-    } else {
-      t.equal(command, 'ps');
-    }
-  }).on('done', function() {
+  ).then(function(results) {
+    t.equal(results[0].cmd, 'ls -l');
+    t.equal(results[1].cmd, 'cd ..');
+    t.equal(results[2].cmd, 'ps');
     t.end();
   });
-
 });
-
