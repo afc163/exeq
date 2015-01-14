@@ -9,6 +9,7 @@ function Exeq(commands) {
   this.deferred = Q.defer();
   this.commands = commands || [];
   this.cwd = '';
+  this.results = [];
   this.run();
   return this.deferred.promise;
 }
@@ -16,25 +17,43 @@ function Exeq(commands) {
 Exeq.prototype.run = function() {
 
   var that = this;
+  var stdout = new Buffer('');
+  var stderr = new Buffer('');
 
   // done!
   if (this.commands.length === 0) {
-    this.deferred.resolve();
+    this.deferred.resolve(this.results);
     return;
   }
 
-  var parsed = parseCommand(this.commands.shift());
-
+  var cmdString = this.commands.shift();
+  var parsed = parseCommand(cmdString);
   var s = spawn(parsed.cmd, parsed.args, {
-    stdio: [
-      process.stdin,
-      process.stdout,
-      process.stderr
-    ],
     cwd: this.cwd
   });
 
-  s.on('exit', function(code) {
+  s.stdout.pipe(process.stdout);
+  s.stdout.on('data', function(data) {
+    stdout = data.toString();
+  });
+
+  s.stderr.pipe(process.stderr);
+  s.stderr.on('data', function(data) {
+    stderr = data.toString();
+  });
+
+  s.on('close', function(code) {
+    if (code) {
+      return that.deferred.reject({
+        code: code,
+        error: stderr.toString()
+      });
+    } else {
+      that.results.push({
+        cmd: cmdString,
+        stdout: stdout.toString()
+      });
+    }
     // cd /path/to
     // change cwd to /path/to
     if (parsed.changeCwd) {
@@ -42,11 +61,6 @@ Exeq.prototype.run = function() {
     }
     that.run();
   });
-
-  s.on('error', function(err) {
-    that.deferred.reject(err);
-  });
-
 };
 
 module.exports = function() {
