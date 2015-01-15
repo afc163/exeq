@@ -19,13 +19,10 @@ $ npm install exeq --save
 ### exeq()
 
 ```js
-var exeq = require('exeq');
-
 // cd command would change spawn cwd automatically
 exeq(
   'mkdir example',
-  'cd example',
-  'touch README.md'
+  'rm -rf example'
 );
 ```
 
@@ -50,6 +47,15 @@ exeq(
 });
 ```
 
+### Array
+
+```js
+exeq([
+  'mkdir example',
+  'rm -rf example'
+]);
+```
+
 ### stdout & stderr
 
 ```js
@@ -71,6 +77,18 @@ exeq(
 }).catch(function(err) {
   console.log(err); // { code: '127', stderr: ' ... ' }
 });
+```
+
+### change cwd
+
+```js
+// cd command would change spawn cwd automatically
+// create README.md in example
+exeq(
+  'mkdir example',
+  'cd example',
+  'touch README.md'
+);
 ```
 
 ## Test
