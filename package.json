@@ -23,9 +23,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "q": "^1.1.2"
+    "native-or-bluebird": "~1.1.2"
   },
   "devDependencies": {
+    "bluebird": "^2.6.4",
     "is-promise": "~1.0.1",
     "tap": "*"
   },

@@ -1,20 +1,16 @@
 var spawn = require('child_process').spawn;
-var fs = require('fs');
 var path = require('path');
-var Q = require('q');
+var Promise = require('native-or-bluebird');
 var platform = require('os').platform();
-var eol = require('os').EOL;
 
 function Exeq(commands) {
-  this.deferred = Q.defer();
   this.commands = commands || [];
   this.cwd = '';
   this.results = [];
-  this.run();
-  return this.deferred.promise;
+  return new Promise(this.run.bind(this));
 }
 
-Exeq.prototype.run = function() {
+Exeq.prototype.run = function(resolve, reject) {
 
   var that = this;
   var stdout = new Buffer('');
@@ -22,7 +18,7 @@ Exeq.prototype.run = function() {
 
   // done!
   if (this.commands.length === 0) {
-    this.deferred.resolve(this.results);
+    resolve(this.results);
     return;
   }
 
@@ -44,33 +40,42 @@ Exeq.prototype.run = function() {
 
   s.on('close', function(code) {
     if (code) {
-      return that.deferred.reject({
+      return reject({
         code: code,
         stderr: stderr.toString()
       });
-    } else {
-      that.results.push({
-        cmd: cmdString,
-        stdout: stdout.toString()
-      });
     }
+
+    that.results.push({
+      cmd: cmdString,
+      stdout: stdout.toString()
+    });
+
     // cd /path/to
     // change cwd to /path/to
     if (parsed.changeCwd) {
       that.cwd = path.resolve(that.cwd, parsed.changeCwd);
     }
-    that.run();
+    that.run(resolve, reject);
   });
 };
 
 module.exports = function() {
-  return new Exeq(Array.prototype.slice.call(arguments));
+  var cmds = [], args = Array.prototype.slice.call(arguments);
+  args.forEach(function(arg) {
+    if (Array.isArray(arg)) {
+      cmds = cmds.concat(arg);
+    } else {
+      cmds.push(arg);
+    }
+  });
+  return new Exeq(cmds);
 };
 
 function parseCommand(cmd) {
   cmd = cmd.trim();
-  var command = (platform == 'win32' ? 'cmd.exe' : 'sh');
-  var args = (platform == 'win32' ? ['/s', '/c'] : ['-c']);
+  var command = (platform === 'win32' ? 'cmd.exe' : 'sh');
+  var args = (platform === 'win32' ? ['/s', '/c'] : ['-c']);
   // change cwd for "cd /path/to"
   if (/^cd\s+/.test(cmd)) {
     var changeCwd = cmd.replace(/^cd\s+/, '');
