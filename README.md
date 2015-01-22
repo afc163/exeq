@@ -19,7 +19,6 @@ $ npm install exeq --save
 ### exeq()
 
 ```js
-// cd command would change spawn cwd automatically
 exeq(
   'mkdir example',
   'rm -rf example'
