@@ -30,12 +30,12 @@ Exeq.prototype.run = function(resolve, reject) {
 
   s.stdout.pipe(process.stdout);
   s.stdout.on('data', function(data) {
-    stdout = data.toString();
+    stdout += data.toString();
   });
 
   s.stderr.pipe(process.stderr);
   s.stderr.on('data', function(data) {
-    stderr = data.toString();
+    stderr += data.toString();
   });
 
   s.on('close', function(code) {
