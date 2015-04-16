@@ -13,15 +13,15 @@ function Exeq(commands) {
   Promise.prototype.kill = function() {
     if (that.proc) {
       try {
-        that.proc.kill('SIGTERM')
-        that.killed = true
+        that.proc.kill('SIGTERM');
+        that.killed = true;
       } catch (e) {
         if (e.errno != 'ESRCH') {
-          throw (e)
+          throw (e);
         }
       }
     }
-  }
+  };
 
   return new Promise(this.run.bind(this));
 }
@@ -70,10 +70,16 @@ Exeq.prototype.run = function(resolve, reject) {
     });
 
     if (that.killed) {
-      return reject({
+      var reason = {
         code: code,
-        stderr: that.results.map(function(result) { return result.stdout.toString()}).join('') + 'Process has been killed.'
-      });
+        stderr: that.results.map(function(result) { return result.stdout.toString(); }).join('') + 'Process has been killed.'
+      };
+
+      if (signal) {
+        reason.errno = signal;
+      }
+
+      return reject(reason);
     }
 
     // cd /path/to
@@ -101,9 +107,10 @@ function parseCommand(cmd) {
   cmd = cmd.trim();
   var command = (platform === 'win32' ? 'cmd.exe' : 'sh');
   var args = (platform === 'win32' ? ['/s', '/c'] : ['-c']);
+  var changeCwd;
   // change cwd for "cd /path/to"
   if (/^cd\s+/.test(cmd)) {
-    var changeCwd = cmd.replace(/^cd\s+/, '');
+    changeCwd = cmd.replace(/^cd\s+/, '');
   }
   return {
     cmd: command,
