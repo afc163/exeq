@@ -10,12 +10,12 @@ test('kill process 1', function(t) {
   ]).catch(function(err) {
     t.equal(err.stderr, '1\nProcess has been killed.');
   }).finally(function(){
-    t.end()
+    t.end();
   });
 
   setTimeout(function(){
-    proc.kill()
-  }, 300)
+    proc.kill();
+  }, 300);
 
 
 });
@@ -27,13 +27,14 @@ test('kill process 2', function(t) {
     'echo 1',
     'echo 2'
   ]).catch(function(err) {
+    t.equal(err.errno, 'SIGTERM');
     t.equal(err.stderr, 'Process has been killed.');
   }).finally(function(){
-    t.end()
+    t.end();
   });
 
   setTimeout(function(){
-    proc.kill()
-  }, 300)
+    proc.kill();
+  }, 300);
 
 });
