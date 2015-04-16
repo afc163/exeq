@@ -23,14 +23,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "native-or-bluebird": "^1.2.0",
-    "bluebird": "^2.6.4"
+    "bluebird": "^2.6.4",
+    "native-or-bluebird": "^1.2.0"
   },
   "devDependencies": {
     "is-promise": "~1.0.1",
-    "tap": "*"
+    "tape": "~4.0.0"
   },
   "scripts": {
-    "test": "tap tests/*.js"
+    "test": "tape tests/*.js"
   }
 }

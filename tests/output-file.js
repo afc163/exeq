@@ -1,4 +1,4 @@
-var test = require('tap').test;
+var test = require('tape').test;
 var exeq = require('..');
 var fs = require('fs');
 var path = require('path');
