@@ -90,6 +90,17 @@ exeq(
 );
 ```
 
+### Kill the execution
+
+```js
+var proc = exeq([
+  'echo 1',
+  'sleep 10',
+  'echo 2'
+]);
+proc.kill();
+```
+
 ## Test
 
 ```bash
