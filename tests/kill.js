@@ -17,7 +17,6 @@ test('kill process 1', function(t) {
     proc.kill();
   }, 300);
 
-
 });
 
 test('kill process 2', function(t) {

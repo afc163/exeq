@@ -33,7 +33,6 @@ Exeq.prototype.run = function(resolve, reject) {
   var stdout = new Buffer('');
   var stderr = new Buffer('');
 
-
   // done!
   if (this.commands.length === 0) {
     resolve(this.results);
@@ -72,7 +71,9 @@ Exeq.prototype.run = function(resolve, reject) {
     if (that.killed) {
       var reason = {
         code: code,
-        stderr: that.results.map(function(result) { return result.stdout.toString(); }).join('') + 'Process has been killed.'
+        stderr: that.results.map(function(result) {
+          return result.stdout.toString();
+        }).join('') + 'Process has been killed.'
       };
 
       if (signal) {
