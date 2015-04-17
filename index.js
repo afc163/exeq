@@ -7,14 +7,32 @@ function Exeq(commands) {
   this.commands = commands || [];
   this.cwd = '';
   this.results = [];
+
+  var that = this;
+
+  Promise.prototype.kill = function() {
+    if (that.proc) {
+      try {
+        that.proc.kill('SIGTERM');
+        that.killed = true;
+      } catch (e) {
+        if (e.errno != 'ESRCH') {
+          throw (e);
+        }
+      }
+    }
+  };
+
   return new Promise(this.run.bind(this));
 }
 
 Exeq.prototype.run = function(resolve, reject) {
 
   var that = this;
+
   var stdout = new Buffer('');
   var stderr = new Buffer('');
+
 
   // done!
   if (this.commands.length === 0) {
@@ -24,7 +42,7 @@ Exeq.prototype.run = function(resolve, reject) {
 
   var cmdString = this.commands.shift();
   var parsed = parseCommand(cmdString);
-  var s = spawn(parsed.cmd, parsed.args, {
+  var s = this.proc = spawn(parsed.cmd, parsed.args, {
     cwd: this.cwd
   });
 
@@ -38,7 +56,7 @@ Exeq.prototype.run = function(resolve, reject) {
     stderr += data.toString();
   });
 
-  s.on('close', function(code) {
+  s.on('close', function(code, signal) {
     if (code) {
       return reject({
         code: code,
@@ -50,6 +68,19 @@ Exeq.prototype.run = function(resolve, reject) {
       cmd: cmdString,
       stdout: stdout.toString()
     });
+
+    if (that.killed) {
+      var reason = {
+        code: code,
+        stderr: that.results.map(function(result) { return result.stdout.toString(); }).join('') + 'Process has been killed.'
+      };
+
+      if (signal) {
+        reason.errno = signal;
+      }
+
+      return reject(reason);
+    }
 
     // cd /path/to
     // change cwd to /path/to
@@ -76,9 +107,10 @@ function parseCommand(cmd) {
   cmd = cmd.trim();
   var command = (platform === 'win32' ? 'cmd.exe' : 'sh');
   var args = (platform === 'win32' ? ['/s', '/c'] : ['-c']);
+  var changeCwd;
   // change cwd for "cd /path/to"
   if (/^cd\s+/.test(cmd)) {
-    var changeCwd = cmd.replace(/^cd\s+/, '');
+    changeCwd = cmd.replace(/^cd\s+/, '');
   }
   return {
     cmd: command,
