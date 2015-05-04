@@ -59,13 +59,15 @@ Exeq.prototype.run = function(resolve, reject) {
     if (code) {
       return reject({
         code: code,
+        stdout: stdout.toString(),
         stderr: stderr.toString()
       });
     }
 
     that.results.push({
       cmd: cmdString,
-      stdout: stdout.toString()
+      stdout: stdout.toString(),
+      stderr: stderr.toString()
     });
 
     if (that.killed) {
