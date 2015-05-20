@@ -4,6 +4,7 @@ Excute shell commands in queue.
 
 [![NPM version](https://img.shields.io/npm/v/exeq.svg?style=flat)](https://npmjs.org/package/exeq)
 [![Build Status](https://img.shields.io/travis/afc163/exeq.svg?style=flat)](https://travis-ci.org/afc163/exeq)
+[![David Status](https://img.shields.io/david/afc163/exeq.svg?style=flat)](https://david-dm.org/afc163/exeq)
 [![NPM downloads](http://img.shields.io/npm/dm/exeq.svg?style=flat)](https://npmjs.org/package/afc163/exeq)
 
 ---
