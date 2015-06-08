@@ -3,18 +3,21 @@ var exeq = require('..');
 
 test('kill process 1', function(t) {
 
+  // Keep the origin promise instance
   var proc = exeq([
     'echo 1',
     'sleep 10',
     'echo 2'
-  ]).catch(function(err) {
+  ]);
+
+  proc.catch(function(err) {
     t.equal(err.stderr, '1\nProcess has been killed.');
   }).finally(function(){
     t.end();
   });
 
   setTimeout(function(){
-    proc.kill();
+    proc.q.kill();
   }, 300);
 
 });
@@ -25,7 +28,9 @@ test('kill process 2', function(t) {
     'sleep 10',
     'echo 1',
     'echo 2'
-  ]).catch(function(err) {
+  ]);
+
+  proc.catch(function(err) {
     t.equal(err.errno, 'SIGTERM');
     t.equal(err.stderr, 'Process has been killed.');
   }).finally(function(){
@@ -33,7 +38,7 @@ test('kill process 2', function(t) {
   });
 
   setTimeout(function(){
-    proc.kill();
+    proc.q.kill();
   }, 300);
 
 });
