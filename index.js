@@ -8,22 +8,10 @@ function Exeq(commands) {
   this.cwd = '';
   this.results = [];
 
-  var that = this;
+  var instance = new Promise(this.run.bind(this));
+  instance.q = this;
 
-  Promise.prototype.kill = function() {
-    if (that.proc) {
-      try {
-        that.proc.kill('SIGTERM');
-        that.killed = true;
-      } catch (e) {
-        if (e.errno != 'ESRCH') {
-          throw (e);
-        }
-      }
-    }
-  };
-
-  return new Promise(this.run.bind(this));
+  return instance;
 }
 
 Exeq.prototype.run = function(resolve, reject) {
@@ -93,6 +81,20 @@ Exeq.prototype.run = function(resolve, reject) {
     that.run(resolve, reject);
   });
 };
+
+Exeq.prototype.kill = function() {
+  if (this.proc) {
+    try {
+      this.proc.kill('SIGTERM');
+      this.killed = true;
+    } catch (e) {
+      if (e.errno != 'ESRCH') {
+        throw (e);
+      }
+    }
+  }
+};
+
 
 module.exports = function() {
   var cmds = [], args = Array.prototype.slice.call(arguments);
