@@ -52,8 +52,9 @@ Exeq.prototype.run = function(resolve, reject) {
   });
 
   s.on('close', function(code, signal) {
+    var reason;
     if (code) {
-      var reason = {
+      reason = {
         code: code,
         stdout: stdout.toString(),
         stderr: stderr.toString()
@@ -70,7 +71,7 @@ Exeq.prototype.run = function(resolve, reject) {
     });
 
     if (that.killed) {
-      var reason = {
+      reason = {
         code: code,
         stderr: that.results.map(function(result) {
           return result.stdout.toString();

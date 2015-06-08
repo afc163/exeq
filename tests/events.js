@@ -18,7 +18,7 @@ test('event done', function(t) {
   proc.q.on('done', function() {
     t.equal(stdout.join(''), '1\n2\n');
     t.end();
-  })
+  });
 
 });
 
@@ -37,7 +37,7 @@ test('event fail', function(t) {
   });
 
   proc.q.on('failed', function() {
-    t.equal(stderr.join(''), 'sh: fail-me: command not found\n');
+    t.ok(stderr.join('').indexOf('not found') > -1 );
     t.end();
   });
 });
