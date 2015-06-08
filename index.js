@@ -1,9 +1,12 @@
+var EventEmitter = require('events').EventEmitter;
+var inherits = require('util').inherits;
 var spawn = require('child_process').spawn;
 var path = require('path');
 var Promise = require('native-or-bluebird');
 var platform = require('os').platform();
 
 function Exeq(commands) {
+  EventEmitter.call(this);
   this.commands = commands || [];
   this.cwd = '';
   this.results = [];
@@ -14,6 +17,8 @@ function Exeq(commands) {
   return instance;
 }
 
+inherits(Exeq, EventEmitter);
+
 Exeq.prototype.run = function(resolve, reject) {
 
   var that = this;
@@ -23,6 +28,7 @@ Exeq.prototype.run = function(resolve, reject) {
 
   // done!
   if (this.commands.length === 0) {
+    this.emit('done', this.results);
     resolve(this.results);
     return;
   }
@@ -35,21 +41,26 @@ Exeq.prototype.run = function(resolve, reject) {
 
   s.stdout.pipe(process.stdout);
   s.stdout.on('data', function(data) {
+    that.emit('stdout', data);
     stdout += data.toString();
   });
 
   s.stderr.pipe(process.stderr);
   s.stderr.on('data', function(data) {
+    that.emit('stderr', data);
     stderr += data.toString();
   });
 
   s.on('close', function(code, signal) {
     if (code) {
-      return reject({
+      var reason = {
         code: code,
         stdout: stdout.toString(),
         stderr: stderr.toString()
-      });
+      };
+
+      that.emit('failed', reason);
+      return reject(reason);
     }
 
     that.results.push({
@@ -70,6 +81,7 @@ Exeq.prototype.run = function(resolve, reject) {
         reason.errno = signal;
       }
 
+      that.emit('killed', reason);
       return reject(reason);
     }
 
