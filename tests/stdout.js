@@ -12,7 +12,7 @@ test('stdout', function(t) {
     t.equal(results[0].stdout.trim(), '123');
     t.equal(results[1].stdout.trim(), 'string');
     t.equal(results[2].stdout.trim(), '456');
-    var date = new Date(results[3].stdout.trim())
+    var date = new Date(results[3].stdout.trim());
     t.notEqual(date.toString(), 'Invalid Date');
     t.end();
   });
