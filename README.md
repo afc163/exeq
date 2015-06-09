@@ -99,7 +99,34 @@ var proc = exeq([
   'sleep 10',
   'echo 2'
 ]);
-proc.kill();
+proc.q.kill();
+```
+
+### Events
+
+```js
+var proc = exeq([
+  'echo 1',
+  'echo 2'
+]);
+
+proc.q.on('stdour', function(data) {
+  console.log(data);
+});
+
+proc.q.on('stderr', function(data) {
+  console.log(data);
+});
+
+proc.q.on('killed', function(reason) {
+  console.log(reason);
+});
+
+proc.q.on('done', function() {
+});
+
+proc.q.on('failed', function() {
+});
 ```
 
 ## Test
