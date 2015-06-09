@@ -1,6 +1,6 @@
 {
   "name": "exeq",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Excute shell commands in queue",
   "main": "index.js",
   "repository": {
