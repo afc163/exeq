@@ -1,6 +1,6 @@
 {
   "name": "exeq",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Excute shell commands in queue",
   "main": "index.js",
   "repository": {
@@ -24,6 +24,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "bluebird": "^3.0.3",
     "native-or-bluebird": "^1.2.0"
   },
   "devDependencies": {
