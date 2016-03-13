@@ -2,7 +2,6 @@ var EventEmitter = require('events').EventEmitter;
 var inherits = require('util').inherits;
 var spawn = require('child_process').spawn;
 var path = require('path');
-var Promise = require('native-or-bluebird');
 var platform = require('os').platform();
 
 function Exeq(commands) {

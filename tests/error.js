@@ -7,7 +7,6 @@ test('catch error', function(t) {
   }).catch(function(err) {
     t.equal(err.code, 127);
     t.ok(err.stderr.indexOf('not found') > -1);
-  }).finally(function() {
     t.end();
   });
 
