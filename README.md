@@ -110,7 +110,7 @@ var proc = exeq([
   'echo 2'
 ]);
 
-proc.q.on('stdour', function(data) {
+proc.q.on('stdout', function(data) {
   console.log(data);
 });
 
