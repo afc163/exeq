@@ -1,6 +1,6 @@
 # exeq
 
-Excute shell commands in queue.
+Execute shell commands in queue.
 
 [![NPM version](https://img.shields.io/npm/v/exeq.svg?style=flat)](https://npmjs.org/package/exeq)
 [![Build Status](https://img.shields.io/travis/afc163/exeq.svg?style=flat)](https://travis-ci.org/afc163/exeq)
